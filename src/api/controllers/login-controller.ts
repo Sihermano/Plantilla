@@ -16,6 +16,8 @@ class LoginController implements IControllerBase {
   public initRoutes() {
     this.router.get('/', sessionFalseMiddleware ,this.index)
     this.router.post('/access', sessionFalseMiddleware ,this.access)
+    this.router.get('/reset_password', sessionFalseMiddleware ,this.reset_password)
+    this.router.post('/reset', sessionFalseMiddleware ,this.reset)
   }
 
   index = (req: Request, res: Response) => {
@@ -32,6 +34,22 @@ class LoginController implements IControllerBase {
     }
     res.status(200).render('login/index', locals)
   }
+
+  reset_password = (req: Request, res: Response) => {
+    let locals = {
+      title: 'Bienvenido',
+      constants: constants,
+      message_color: '',
+      message: '',
+      csss: loadCss([
+        'assets/css/styles',
+        'assets/css/login',
+      ]), 
+      jss: loadJs([]), 
+    }
+    res.status(200).render('login/reset', locals)
+  }
+
 
   access = (req: Request, res: Response) => {
     let user = req.body.user
@@ -54,5 +72,29 @@ class LoginController implements IControllerBase {
     }
   }
 }
+
+
+reset = (req: Request, res: Response) => {
+  let user = req.body.user
+  let password = req.body.password
+  if(user == 'admin' && password == 'ulima'){
+    res.redirect('/')
+  }else{
+    let locals = {
+      title: 'Bienvenido',
+      constants: constants,
+      message_color: 'text-danger',
+      message: 'Usuario y/o contraseña no válidos',
+      csss: loadCss([
+        'assets/css/styles',
+        'assets/css/login',
+      ]), 
+      jss: loadJs([]), 
+    }
+    res.status(200).render('login/index', locals)
+  }
+}
+}
+
 
 export default LoginController
